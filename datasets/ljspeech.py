@@ -25,20 +25,14 @@ def build_from_path(in_dir, out_dir, num_workers=1, tqdm=lambda x: x):
     index = 1
     with open(os.path.join(in_dir, 'metadata.csv'), encoding='utf-8') as f:
         for line in f:
-            try:
-
-                parts = line.strip().split('|')
-                wav_path = os.path.join(in_dir, 'wavs', '%s' % parts[0])
-                text = parts[1]
-                futures.append(executor.submit(partial(_process_utterance, out_dir, index, wav_path, text)))
-                index += 1
-
-            except:
-
-                pass
+            parts = line.strip().split('|')
+            wav_path = os.path.join(in_dir, 'wavs', '%s.wav' % parts[0])
+            text = parts[2]
+            futures.append(executor.submit(partial(_process_utterance, out_dir, index, wav_path, text)))
+            index += 1
     return [future.result() for future in tqdm(futures)]
 
-    
+
 def _process_utterance(out_dir, index, wav_path, text):
     '''Preprocesses a single utterance audio/text pair.
 
@@ -66,8 +60,8 @@ def _process_utterance(out_dir, index, wav_path, text):
     mel_spectrogram = audio.melspectrogram(wav).astype(np.float32)
 
     # Write the spectrograms to disk:
-    spectrogram_filename = 'bible-spec-%05d.npy' % index
-    mel_filename = 'bible-mel-%05d.npy' % index
+    spectrogram_filename = 'ljspeech-spec-%05d.npy' % index
+    mel_filename = 'ljspeech-mel-%05d.npy' % index
     np.save(os.path.join(out_dir, spectrogram_filename), spectrogram.T, allow_pickle=False)
     np.save(os.path.join(out_dir, mel_filename), mel_spectrogram.T, allow_pickle=False)
 

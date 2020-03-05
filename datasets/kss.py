@@ -38,7 +38,7 @@ def build_from_path(in_dir, out_dir, num_workers=1, tqdm=lambda x: x):
                 pass
     return [future.result() for future in tqdm(futures)]
 
-    
+
 def _process_utterance(out_dir, index, wav_path, text):
     '''Preprocesses a single utterance audio/text pair.
 
@@ -66,8 +66,8 @@ def _process_utterance(out_dir, index, wav_path, text):
     mel_spectrogram = audio.melspectrogram(wav).astype(np.float32)
 
     # Write the spectrograms to disk:
-    spectrogram_filename = 'bible-spec-%05d.npy' % index
-    mel_filename = 'bible-mel-%05d.npy' % index
+    spectrogram_filename = 'kss-spec-%05d.npy' % index
+    mel_filename = 'kss-mel-%05d.npy' % index
     np.save(os.path.join(out_dir, spectrogram_filename), spectrogram.T, allow_pickle=False)
     np.save(os.path.join(out_dir, mel_filename), mel_spectrogram.T, allow_pickle=False)
 
